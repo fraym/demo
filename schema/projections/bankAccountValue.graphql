@@ -1,0 +1,16 @@
+type BankAccountValue
+    @permission(read: [ACCOUNTS_READ])
+    @upsertOn(
+        on: { topic: "bankingApp", eventTypes: ["MoneyPaid", "MoneyReceived"] }
+        identifyBy: { payload: ["bankAccountId"] }
+    ) {
+    user: ID!
+        @index
+        @from(events: ["MoneyPaid", "MoneyReceived"], value: "payload.userId")
+        @filterFromJwtData(key: "user")
+    bankAccount: BankAccount!
+        @from(events: ["MoneyPaid", "MoneyReceived"], value: "payload.bankAccountId")
+    value: Int!
+        @from(events: ["MoneyReceived"], value: "projection.value + payload.value")
+        @from(events: ["MoneyPaid"], value: "projection.value - payload.value")
+}

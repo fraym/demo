@@ -1,0 +1,254 @@
+networks:
+    freym:
+
+volumes:
+    s3_data:
+    postgres14_data:
+
+services:
+    postgres:
+        image: bitnami/postgresql:14.12.0
+        restart: unless-stopped
+        environment:
+            - POSTGRESQL_PASSWORD=change-me
+            - POSTGRESQL_POSTGRES_PASSWORD=change-me
+        networks:
+            - freym
+        volumes:
+            - postgres14_data:/bitnami/postgresql
+        ports:
+            - 5433:5432
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 30s
+            timeout: 30s
+            retries: 3
+
+    s3:
+        image: bitnami/minio:2024.5.10
+        restart: unless-stopped
+        environment:
+            - MINIO_ROOT_USER=root
+            - MINIO_ROOT_PASSWORD=change-me
+        networks:
+            - freym
+        volumes:
+            - s3_data:/data
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            interval: 30s
+            timeout: 20s
+            retries: 3
+
+    imgproxy:
+        image: darthsim/imgproxy:v3.24.1
+        restart: unless-stopped
+        environment:
+            - IMGPROXY_MAX_SRC_RESOLUTION=50.0
+            - IMGPROXY_ALLOWED_SOURCES=s3://
+            - IMGPROXY_USE_S3=true
+            - IMGPROXY_S3_ENDPOINT=http://s3:9000
+            - AWS_ACCESS_KEY_ID=root
+            - AWS_SECRET_ACCESS_KEY=change-me
+        networks:
+            - freym
+        healthcheck:
+            test: ["CMD", "imgproxy", "health"]
+            timeout: 10s
+            interval: 10s
+            retries: 3
+
+    sync:
+        image: 067475952430.dkr.ecr.eu-central-1.amazonaws.com/fraym/sync:0.2.3
+        restart: unless-stopped
+        environment:
+            - APP_ENV=development
+            - LOG_LEVEL=info
+        ports:
+            - 3010:3000
+            - 9010:9000
+        networks:
+            - freym
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1",
+                ]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+            start_period: 4s
+
+    streams:
+        image: 067475952430.dkr.ecr.eu-central-1.amazonaws.com/fraym/streams:5.2.18
+        restart: unless-stopped
+        environment:
+            - APP_ENV=development
+            - LOG_LEVEL=info
+            - SYNC_CLIENT_ADDRESS=sync:9000
+            - SYNC_CLIENT_APP_PREFIX=streams
+            - POSTGRES_CONNECTION=postgres://postgres:change-me@postgres:5432
+            - S3_ENDPOINT=s3:9000
+            - S3_ACCESS_KEY=root
+            - S3_SECRET_KEY=change-me
+            - S3_SSL=false
+            - S3_BUCKET=streams
+            - AUTH_SECRET=change-me
+        ports:
+            - 3020:3000
+            - 9020:9000
+        networks:
+            - freym
+        depends_on:
+            - sync
+            - postgres
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1",
+                ]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+            start_period: 4s
+
+    projections:
+        image: 067475952430.dkr.ecr.eu-central-1.amazonaws.com/fraym/projections:0.21.10
+        restart: unless-stopped
+        environment:
+            - APP_ENV=development
+            - LOG_LEVEL=info
+            - SYNC_CLIENT_ADDRESS=sync:9000
+            - SYNC_CLIENT_APP_PREFIX=projections
+            - POSTGRES_CONNECTION=postgres://postgres:change-me@postgres:5432
+            - STREAMS_CLIENT_ADDRESS=streams:9000
+            - STREAMS_CLIENT_GROUP_ID=projections
+            - AUTH_SECRET=change-me
+            - MANAGEMENT_API_TOKEN=change-me
+            - CORS_ALLOW_ORIGINS=*
+        ports:
+            - 3030:3000
+            - 9030:9000
+        networks:
+            - freym
+        depends_on:
+            - sync
+            - streams
+            - postgres
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1",
+                ]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+            start_period: 4s
+
+    crud:
+        image: 067475952430.dkr.ecr.eu-central-1.amazonaws.com/fraym/crud:0.18.2
+        restart: unless-stopped
+        environment:
+            - APP_ENV=development
+            - LOG_LEVEL=info
+            - POSTGRES_CONNECTION=postgres://postgres:change-me@postgres:5432
+            - STREAMS_CLIENT_ADDRESS=streams:9000
+            - STREAMS_CLIENT_GROUP_ID=crud
+            - SYNC_CLIENT_ADDRESS=sync:9000
+            - SYNC_CLIENT_APP_PREFIX=crud
+            - PROJECTIONS_CLIENT_ADDRESS=projections:9000
+            - S3_ENDPOINT=s3:9000
+            - S3_ACCESS_KEY=root
+            - S3_SECRET_KEY=change-me
+            - S3_SSL=false
+            - S3_BUCKET=crud
+            - IMGPROXY_URL=http://imgproxy:8080
+            - AUTH_SECRET=change-me
+            - MANAGEMENT_API_TOKEN=change-me
+            - HTTP_REQUEST_BODY_LIMIT=10
+            - CORS_ALLOW_ORIGINS=*
+        ports:
+            - 3040:3000
+            - 9040:9000
+        networks:
+            - freym
+        depends_on:
+            - projections
+            - streams
+            - postgres
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1",
+                ]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+            start_period: 4s
+
+    migrations:
+        image: 067475952430.dkr.ecr.eu-central-1.amazonaws.com/fraym/migrations:0.7.0
+        restart: unless-stopped
+        environment:
+            - APP_ENV=development
+            - LOG_LEVEL=info
+            - API_TOKEN=change-me
+            - AUTH_CLIENT_ADDRESS=auth:9000
+            - CRUD_CLIENT_ADDRESS=crud:9000
+            - PROJECTIONS_CLIENT_ADDRESS=projections:9000
+        ports:
+            - 3050:3000
+            - 9050:9000
+        networks:
+            - freym
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1",
+                ]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+            start_period: 4s
+
+    auth:
+        image: 067475952430.dkr.ecr.eu-central-1.amazonaws.com/fraym/auth:0.12.3
+        restart: unless-stopped
+        environment:
+            - APP_ENV=development
+            - LOG_LEVEL=info
+            - MANAGEMENT_API_TOKEN=change-me
+            - AUTH_SECRET=change-me
+            - AUTH_SECRET_INITIAL_PW=change-me
+            - CRUD_CLIENT_ADDRESS=crud:9000
+            - STREAMS_CLIENT_ADDRESS=streams:9000
+            - STREAMS_CLIENT_GROUP_ID=auth
+            - MIGRATIONS_CLIENT_ADDRESS=migrations:9000
+            - MIGRATIONS_NAMESPACE=FraymAuth
+            - SYNC_CLIENT_ADDRESS=sync:9000
+            - SYNC_CLIENT_APP_PREFIX=auth
+            - CORS_ALLOW_ORIGINS=*
+        ports:
+            - 3060:3000
+            - 9060:9000
+        networks:
+            - freym
+        depends_on:
+            - crud
+            - streams
+            - migrations
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1",
+                ]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+            start_period: 4s

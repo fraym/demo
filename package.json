@@ -1,0 +1,17 @@
+{
+	"name": "@fraym/demo",
+	"private": true,
+	"scripts": {
+		"format": "prettier --write \"./app/**/*.{ts,tsx,js,mjs,json,scss,css}\""
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"workspaces": [
+		"*"
+	],
+	"devDependencies": {
+		"@becklyn/prettier": "^2.1.1"
+	},
+	"prettier": "@becklyn/prettier"
+}
