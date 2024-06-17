@@ -1,0 +1,12 @@
+type ShoppingCart
+    @upsertOn(
+        on: { topic: "demoApp", eventTypes: ["AddProductToCart", "RemoveProductFromCart"] }
+        identifyBy: { payload: ["shoppingCartId"] }
+    ) {
+    products: [Product!]!
+        @from(events: ["AddProductToCart"], value: "append(projection.products, payload.productId)")
+        @from(
+            events: ["RemoveProductFromCart"]
+            value: "filter(projection.products, # != payload.productId)"
+        )
+}

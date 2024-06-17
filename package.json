@@ -2,7 +2,8 @@
 	"name": "@fraym/demo",
 	"private": true,
 	"scripts": {
-		"format": "prettier --write \"./app/**/*.{ts,tsx,js,mjs,json,scss,css}\""
+		"lint": "prettier --check \"./app/**/*.{ts,tsx,js,mjs,scss,css}\"",
+		"format": "prettier --write \"./app/**/*.{ts,tsx,js,mjs,scss,css}\""
 	},
 	"engines": {
 		"node": ">=18"

@@ -1,0 +1,6 @@
+type Product
+    @crudType
+    @permission(create: [PRODUCTS_WRITE], update: [PRODUCTS_WRITE], delete: [PRODUCTS_WRITE]) {
+    name: String!
+    price: Float!
+}
