@@ -1,12 +1,32 @@
 type ShoppingCart
     @upsertOn(
-        on: { topic: "demoApp", eventTypes: ["AddProductToCart", "RemoveProductFromCart"] }
+        on: {
+            topic: "demoApp"
+            eventTypes: ["CreateShoppingCart", "CreateShoppingCartItem", "RemoveItemFromCart"]
+        }
+        identifyBy: { payload: ["shoppingCartId"] }
+    )
+    @removeOn(
+        on: { topic: "demoApp", eventTypes: ["DeleteShoppingCart"] }
         identifyBy: { payload: ["shoppingCartId"] }
     ) {
-    products: [Product!]!
-        @from(events: ["AddProductToCart"], value: "append(projection.products, payload.productId)")
+    name: String!
+    items: [ShoppingCartItem!]!
+        @from(events: ["CreateShoppingCartItem"], value: "append(projection.items, payload.itemId)")
         @from(
-            events: ["RemoveProductFromCart"]
-            value: "filter(projection.products, # != payload.productId)"
+            events: ["RemoveItemFromCart"]
+            value: "filter(projection.items, # != payload.itemId)"
         )
+}
+
+type ShoppingCartItem
+    @upsertOn(
+        on: { topic: "demoApp", eventTypes: ["CreateShoppingCartItem"] }
+        identifyBy: { payload: ["itemId"] }
+    )
+    @removeOn(
+        on: { topic: "demoApp", eventTypes: ["RemoveItemFromCart"] }
+        identifyBy: { payload: ["itemId"] }
+    ) {
+    product: Product!
 }

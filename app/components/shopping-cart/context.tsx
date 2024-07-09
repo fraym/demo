@@ -1,16 +1,14 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { ResultOf } from "gql.tada";
-import { GetCartsQuery } from "@/api/projections";
-import { useToast } from "@/components/ui/use-toast";
-import { useQuery } from "@urql/next";
+import { CartSubscription, GetCartsQuery } from "@/api/projections";
+import { ShoppingCart } from "@/components/shopping-cart/columns";
+import { UseQueryExecute, useQuery, useSubscription } from "@urql/next";
 
 interface ShoppingCartContext {
-    // createProduct: (name: string, price: number, onSuccess?: () => void) => void;
-    // updateProduct: (id: string, name: string, price: number, onSuccess?: () => void) => void;
-    // deleteProduct: (id: string, onSuccess?: () => void) => void;
     carts: ResultOf<typeof GetCartsQuery>["getShoppingCartList"]["data"];
+    reload: UseQueryExecute;
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContext>({} as ShoppingCartContext);
@@ -18,76 +16,60 @@ const ShoppingCartContext = createContext<ShoppingCartContext>({} as ShoppingCar
 export const ShoppingCartProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [response, reload] = useQuery({
         query: GetCartsQuery,
-        variables: { input: {} },
+        variables: { input: { useStrongConsistency: true } },
     });
-    // const [createState, createProductMutation] = useCrudMutation(CreateProductMutation);
-    // const [updateState, updateProductMutation] = useCrudMutation(UpdateProductMutation);
-    // const [deleteState, deleteProductMutation] = useCrudMutation(DeleteProductMutation);
-    const { toast } = useToast();
+    const [subscription, startSubscription] = useSubscription<
+        ResultOf<typeof CartSubscription>,
+        ShoppingCart[]
+    >(
+        {
+            pause: response.fetching,
+            query: CartSubscription,
+            variables: { input: {} },
+        },
+        (prev, data) => {
+            if (!prev) {
+                prev = response.data?.getShoppingCartList.data ?? [];
+            }
 
-    // const createProduct = useCallback(
-    //     async (name: string, price: number, onSuccess?: () => void) => {
-    //         const { error } = await createProductMutation({ name, price });
+            if (data.subscribeToShoppingCartList?.__typename === "removeData") {
+                return prev.filter(product => product.id !== data.subscribeToShoppingCartList!.id);
+            }
 
-    //         if (error) {
-    //             toast({
-    //                 title: "Uh oh! Something went wrong.",
-    //                 description: error.message,
-    //             });
-    //             return;
-    //         }
+            if (data.subscribeToShoppingCartList?.__typename === "ShoppingCart") {
+                const updatedItem = prev.find(
+                    product => product.id === data.subscribeToShoppingCartList!.id
+                );
 
-    //         reload();
-    //         onSuccess && onSuccess();
-    //     },
-    //     [reload, toast, createProductMutation]
-    // );
+                if (!updatedItem) {
+                    return [...prev, data.subscribeToShoppingCartList!];
+                }
 
-    // const updateProduct = useCallback(
-    //     async (id: string, name: string, price: number, onSuccess?: () => void) => {
-    //         const { error } = await updateProductMutation({ id, name, price });
+                return prev.map(product => {
+                    if (
+                        product.id === data.subscribeToShoppingCartList!.id &&
+                        data.subscribeToShoppingCartList?.__typename === "ShoppingCart"
+                    ) {
+                        return data.subscribeToShoppingCartList! as ShoppingCart;
+                    }
 
-    //         if (error) {
-    //             toast({
-    //                 title: "Uh oh! Something went wrong.",
-    //                 description: error.message,
-    //             });
-    //             return;
-    //         }
+                    return product;
+                });
+            }
 
-    //         reload();
-    //         onSuccess && onSuccess();
-    //     },
-    //     []
-    // );
+            return prev ?? [];
+        }
+    );
 
-    // const deleteProduct = useCallback(
-    //     async (id: string, onSuccess?: () => void) => {
-    //         console.log("deleteProduct", id);
-
-    //         const { error } = await deleteProductMutation({ id });
-
-    //         if (error) {
-    //             toast({
-    //                 title: "Uh oh! Something went wrong.",
-    //                 description: error.message,
-    //             });
-    //             return;
-    //         }
-
-    //         reload({ requestPolicy: "network-only" });
-    //         onSuccess && onSuccess();
-    //     },
-    //     [reload, toast, deleteProductMutation]
-    // );
+    useEffect(() => {
+        startSubscription();
+    }, [startSubscription]);
 
     return (
         <ShoppingCartContext.Provider
             value={{
-                // createProduct,
-                // updateProduct,
-                // deleteProduct,
-                carts: response.data?.getShoppingCartList.data || [],
+                carts: subscription.data ?? response.data?.getShoppingCartList.data ?? [],
+                reload,
             }}>
             {children}
         </ShoppingCartContext.Provider>

@@ -5,11 +5,37 @@ export const GetCartsQuery = graphql(`
         getShoppingCartList(input: $input) {
             data {
                 id
-                products {
+                name
+                items {
                     id
-                    name
-                    price
+                    product {
+                        id
+                        name
+                        price
+                    }
                 }
+            }
+        }
+    }
+`);
+
+export const CartSubscription = graphql(`
+    subscription ProductSubscription($input: SubscribeShoppingCartListInput!) {
+        subscribeToShoppingCartList(input: $input) {
+            ... on ShoppingCart {
+                id
+                name
+                items {
+                    id
+                    product {
+                        id
+                        name
+                        price
+                    }
+                }
+            }
+            ... on removeData {
+                id
             }
         }
     }

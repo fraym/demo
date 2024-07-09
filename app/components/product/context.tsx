@@ -9,7 +9,6 @@ import {
     ProductSubscription,
     UpdateProductMutation,
     useCrudMutation,
-    useCrudSubscription,
 } from "@/api/crud";
 import { Product } from "@/components/product/columns";
 import { useToast } from "@/components/ui/use-toast";
@@ -40,15 +39,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
                 prev = response.data?.getProductList.data ?? [];
             }
 
-            console.log("d", data);
-
             if (data.subscribeToProductList?.__typename === "removeData") {
-                console.log(
-                    "removeData",
-                    prev.map(p => p.id).join(","),
-                    data.subscribeToProductList?.id
-                );
-
                 return prev.filter(product => product.id !== data.subscribeToProductList!.id);
             }
 
@@ -71,24 +62,6 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
             }
 
             return prev ?? [];
-
-            // if (data.subscribeToProductList.__typename === "removeData") {
-            //     // return {
-            //     //     ...prev,
-            //     //     getProductList: {
-            //     //         data: prev.getProductList.data.filter(
-            //     //             product => product.id !== data.subscribeToProductList.id
-            //     //         ),
-            //     //     },
-            //     // };
-            // }
-
-            // return {
-            //     ...prev,
-            //     getProductList: {
-            //         // data: [...prev.getProductList.data, data.subscribeToProductList],
-            //     },
-            // };
         }
     );
     const [createState, createProductMutation] = useCrudMutation(CreateProductMutation);
@@ -136,8 +109,6 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
 
     const deleteProduct = useCallback(
         async (id: string, onSuccess?: () => void) => {
-            console.log("deleteProduct", id);
-
             const { error } = await deleteProductMutation({ id });
 
             if (error) {
@@ -149,6 +120,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
             }
 
             onSuccess && onSuccess();
+            reload({ requestPolicy: "network-only" });
         },
         [reload, toast, deleteProductMutation]
     );
