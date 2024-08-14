@@ -11,6 +11,7 @@ export type Product = {
     id: string;
     name: string;
     price: number;
+    amount: number;
 };
 
 export const productColumns: ColumnDef<Product>[] = [
@@ -21,6 +22,10 @@ export const productColumns: ColumnDef<Product>[] = [
     {
         accessorKey: "price",
         header: "Price",
+    },
+    {
+        accessorKey: "amount",
+        header: "Amount",
     },
     {
         id: "actions",

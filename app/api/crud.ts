@@ -22,6 +22,7 @@ export const GetProductsQuery = graphql(`
                 id
                 name
                 price
+                amount
             }
         }
     }
@@ -34,6 +35,7 @@ export const ProductSubscription = graphql(`
                 id
                 name
                 price
+                amount
             }
             ... on removeData {
                 id
@@ -43,21 +45,22 @@ export const ProductSubscription = graphql(`
 `);
 
 export const CreateProductMutation = graphql(`
-    mutation CreateProduct($name: String!, $price: Float!) {
-        createProduct(input: { data: { name: $name, price: $price } }) {
+    mutation CreateProduct($name: String!, $price: Float!, $amount: Int!) {
+        createProduct(input: { data: { name: $name, price: $price, amount: $amount } }) {
             id
         }
     }
 `);
 
 export const UpdateProductMutation = graphql(`
-    mutation UpdateProduct($id: ID!, $name: String!, $price: Float!) {
+    mutation UpdateProduct($id: ID!, $name: String!, $price: Float!, $amount: Int!) {
         updateProduct(
-            input: { id: $id, data: { name: { value: $name }, price: { value: $price } } }
+            input: { id: $id, data: { name: { value: $name }, price: { value: $price }, amount: { amount: $amount } } }
         ) {
             id
             name
             price
+            amount
         }
     }
 `);

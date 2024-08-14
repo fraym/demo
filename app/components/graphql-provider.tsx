@@ -33,7 +33,7 @@ export const GraphqlProvider: React.FC<React.PropsWithChildren> = ({ children })
                         operation.context.url =
                             clientName === "projections"
                                 ? "http://localhost:3030/delivery/graphql" // @todo: .env
-                                : "http://localhost:3040/delivery/graphql"; // @todo: .env
+                                : "http://localhost:3050/delivery/graphql"; // @todo: .env
 
                         return utils.appendHeaders(operation, {
                             Authorization: `Bearer ${token}`,

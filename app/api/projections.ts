@@ -12,6 +12,7 @@ export const GetCartsQuery = graphql(`
                         id
                         name
                         price
+                        amount
                     }
                 }
             }
@@ -31,6 +32,7 @@ export const CartSubscription = graphql(`
                         id
                         name
                         price
+                        amount
                     }
                 }
             }

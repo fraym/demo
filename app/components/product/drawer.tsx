@@ -24,22 +24,25 @@ interface ProductDrawerProps {
 export const ProductDrawer: React.FC<ProductDrawerProps> = ({ trigger, product }) => {
     const [name, setName] = useState(product?.name ?? "");
     const [price, setPrice] = useState(product?.price.toString() ?? "");
+    const [amount, setAmount] = useState(product?.amount.toString() ?? "");
     const { createProduct, updateProduct } = useProducts();
 
     const save = useCallback(async () => {
         if (product) {
-            updateProduct(product.id, name, parseFloat(price), () => {
+            updateProduct(product.id, name, parseFloat(price), parseInt(amount), () => {
                 setName(product ? name : "");
                 setPrice(product ? price : "");
+                setAmount(product ? amount : "");
             });
             return;
         }
 
-        createProduct(name, parseFloat(price), () => {
+        createProduct(name, parseFloat(price), parseInt(amount), () => {
             setName("");
             setPrice("");
+            setAmount("");
         });
-    }, [product, name, price, createProduct, updateProduct]);
+    }, [product, name, price, amount, createProduct, updateProduct]);
 
     useEffect(() => {
         if (!product) {
@@ -48,6 +51,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({ trigger, product }
 
         setName(product.name);
         setPrice(product.price.toString());
+        setAmount(product.amount.toString());
     }, [product]);
 
     return (
@@ -88,6 +92,16 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({ trigger, product }
                                     placeholder="Price"
                                     value={price}
                                     onChange={e => setPrice(e.currentTarget.value)}
+                                />
+                            </div>
+                            <div className="grid w-full max-w-sm items-center gap-1.5">
+                                <Label htmlFor="amount">Amount</Label>
+                                <Input
+                                    type="number"
+                                    id="amount"
+                                    placeholder="Amount"
+                                    value={amount}
+                                    onChange={e => setAmount(e.currentTarget.value)}
                                 />
                             </div>
                         </div>

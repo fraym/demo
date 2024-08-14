@@ -15,8 +15,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { useQuery, useSubscription } from "@urql/next";
 
 interface ProductContext {
-    createProduct: (name: string, price: number, onSuccess?: () => void) => void;
-    updateProduct: (id: string, name: string, price: number, onSuccess?: () => void) => void;
+    createProduct: (name: string, price: number, amount: number, onSuccess?: () => void) => void;
+    updateProduct: (id: string, name: string, price: number, amount: number, onSuccess?: () => void) => void;
     deleteProduct: (id: string, onSuccess?: () => void) => void;
     products: ResultOf<typeof GetProductsQuery>["getProductList"]["data"];
 }
@@ -36,7 +36,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
         },
         (prev, data) => {
             if (!prev) {
-                prev = response.data?.getProductList.data ?? [];
+                prev = (response.data?.getProductList.data ?? []) as Product[];
             }
 
             if (data.subscribeToProductList?.__typename === "removeData") {
@@ -74,8 +74,8 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     }, [startSubscription]);
 
     const createProduct = useCallback(
-        async (name: string, price: number, onSuccess?: () => void) => {
-            const { error } = await createProductMutation({ name, price });
+        async (name: string, price: number, amount: number, onSuccess?: () => void) => {
+            const { error } = await createProductMutation({ name, price, amount });
 
             if (error) {
                 toast({
@@ -91,8 +91,8 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
     );
 
     const updateProduct = useCallback(
-        async (id: string, name: string, price: number, onSuccess?: () => void) => {
-            const { error } = await updateProductMutation({ id, name, price });
+        async (id: string, name: string, price: number, amount: number, onSuccess?: () => void) => {
+            const { error } = await updateProductMutation({ id, name, price, amount });
 
             if (error) {
                 toast({
