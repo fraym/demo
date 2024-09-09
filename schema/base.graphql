@@ -52,11 +52,8 @@ directive @from(
     condition: String
     value: String
 ) repeatable on FIELD_DEFINITION
-directive @fromJwtData(key: String!) on FIELD_DEFINITION+
-directive @gdpr(
-    default: String!,
-    condition: String
-)
+directive @fromJwtData(key: String!) on FIELD_DEFINITION
+directive @gdpr(default: String!, condition: String) on FIELD_DEFINITION
 
 ## projections only
 scalar EventEnvelope
