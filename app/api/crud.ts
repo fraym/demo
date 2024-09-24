@@ -55,7 +55,7 @@ export const CreateProductMutation = graphql(`
 export const UpdateProductMutation = graphql(`
     mutation UpdateProduct($id: ID!, $name: String!, $price: Float!, $amount: Int!) {
         updateProduct(
-            input: { id: $id, data: { name: { value: $name }, price: { value: $price }, amount: { amount: $amount } } }
+            input: { id: $id, data: { name: $name , price: $price, amount: $amount } }
         ) {
             id
             name
