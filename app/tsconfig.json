@@ -30,7 +30,7 @@
                 }, {
                     "name": "crud",
                     "schema": {
-                        "url": "http://localhost:3040/delivery/graphql",
+                        "url": "http://localhost:3050/delivery/graphql",
                         "headers": {
                             "Accept": "application/graphql-response+json"
                         }
