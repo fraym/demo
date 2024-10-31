@@ -4,7 +4,7 @@ This demo app is intended to be a starting point to try out Freym. Please have a
 
 ## Get in touch
 
-The Freym demo is a closed demo. To get a running demo instance of Freym please get in touch with us: https://becklyn.com/en/contact
+The Freym demo is a closed demo. To get a running demo instance of Freym please [get in touch with us](https://becklyn.com/en/contact)
 
 ## Local setup
 
