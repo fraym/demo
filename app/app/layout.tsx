@@ -1,15 +1,10 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { GraphqlProvider } from "@/components/graphql-provider";
-import { Navigation, NavigationItem } from "@/components/navigation/navigation";
-import { ProductProvider } from "@/components/product/context";
-import { ShoppingCartProvider } from "@/components/shopping-cart/context";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
-import { cn } from "@/lib/utils";
-import "./globals.scss";
+"use client";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+import { Suspense } from "react";
+import { GraphqlProvider } from "@/components/context/GraphqlProvider";
+import { ProductProvider } from "@/components/context/ProductProvider";
+import { ShoppingCartProvider } from "@/components/context/ShoppingCartProvider";
+import { Navigation, NavigationItem } from "@/components/navigation/navigation";
 
 const navigationItems: NavigationItem[] = [
     {
@@ -28,21 +23,32 @@ const navigationItems: NavigationItem[] = [
         ],
     },
     {
-        title: "Demo",
+        title: "Sandboxes",
         entries: [
             {
                 title: "Streams",
-                href: "/demo/streams",
-                description: "Manage products in the system.",
+                href: `https://${process.env.NEXT_PUBLIC_CLIENT_NAME}.demo.freym.io/streams/management/graphql/sandbox`,
+                description: "Try out the streams graphql api in a sandbox environment.",
+            },
+            {
+                title: "Projections",
+                href: `https://${process.env.NEXT_PUBLIC_CLIENT_NAME}.demo.freym.io/projections/delivery/graphql/sandbox`,
+                description:
+                    "Try out the dynamic projections graphql api in a sandbox environment.",
+            },
+            {
+                title: "CRUD",
+                href: `https://${process.env.NEXT_PUBLIC_CLIENT_NAME}.demo.freym.io/crud/delivery/graphql/sandbox`,
+                description: "Try out the dynamic crud graphql api in a sandbox environment.",
+            },
+            {
+                title: "Auth",
+                href: `https://${process.env.NEXT_PUBLIC_CLIENT_NAME}.demo.freym.io/auth/management/graphql/sandbox`,
+                description: "Try out the auth graphql api in a sandbox environment.",
             },
         ],
     },
 ];
-
-export const metadata: Metadata = {
-    title: "Freym demo app",
-    description: "event-sourcing made easy",
-};
 
 export default function RootLayout({
     children,
@@ -50,25 +56,17 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
-            <head />
-            <body className={cn("min-h-screen font-sans antialiased dark", inter.variable)}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange>
-                    <GraphqlProvider>
-                        <Navigation items={navigationItems} />
-                        <ProductProvider>
-                            <ShoppingCartProvider>
-                                <div className="content">{children}</div>
-                            </ShoppingCartProvider>
-                        </ProductProvider>
-                    </GraphqlProvider>
-                    <Toaster />
-                </ThemeProvider>
-            </body>
-        </html>
+        <>
+            <Navigation items={navigationItems} />
+            <GraphqlProvider>
+                <Suspense>
+                    <ProductProvider>
+                        <ShoppingCartProvider>
+                            <div className="content">{children}</div>
+                        </ShoppingCartProvider>
+                    </ProductProvider>
+                </Suspense>
+            </GraphqlProvider>
+        </>
     );
 }

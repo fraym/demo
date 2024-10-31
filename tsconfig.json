@@ -1,0 +1,78 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }, { 
+        "name": "gql.tada/ts-plugin", 
+        "schemas":  [{
+          "name": "streams",
+          "schema": {
+              "url": "https://demo.demo.freym.io/streams/management/graphql",
+              "headers": {
+                  "Accept": "application/graphql-response+json"
+              }
+          },
+          "tadaOutputLocation": "./lib/api/streams-env.d.ts"
+        }, {
+          "name": "projections",
+          "schema": {
+              "url": "https://demo.demo.freym.io/projections/delivery/graphql",
+              "headers": {
+                  "Accept": "application/graphql-response+json"
+              }
+          },
+          "tadaOutputLocation": "./lib/api/projections-env.d.ts"
+        }, {
+          "name": "crud",
+          "schema": {
+              "url": "https://demo.demo.freym.io/crud/delivery/graphql",
+              "headers": {
+                  "Accept": "application/graphql-response+json"
+              }
+          },
+          "tadaOutputLocation": "./lib/api/crud-env.d.ts"
+        }, {
+          "name": "auth",
+          "schema": {
+              "url": "https://demo.demo.freym.io/auth/management/graphql",
+              "headers": {
+                  "Accept": "application/graphql-response+json"
+              }
+          },
+          "tadaOutputLocation": "./lib/api/auth-env.d.ts"
+        }],
+      } 
+    ],
+    "paths": {
+        "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

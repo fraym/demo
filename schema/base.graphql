@@ -102,5 +102,8 @@ directive @dangerouslyRemoveOn(
 ) repeatable on OBJECT
 directive @global on OBJECT
 
+## view only
+directive @view(sqlFile: String!, materialize: Boolean!) on OBJECT
+
 ## crud only
 directive @crudType on OBJECT
