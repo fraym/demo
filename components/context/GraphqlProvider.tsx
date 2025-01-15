@@ -7,7 +7,6 @@ import { authExchange } from "@urql/exchange-auth";
 import {
     Exchange,
     UrqlProvider,
-    cacheExchange,
     createClient,
     fetchExchange,
     ssrExchange,
@@ -153,7 +152,7 @@ export const GraphqlProvider: React.FC<React.PropsWithChildren> = ({ children })
                 },
             },
             suspense: true,
-            exchanges: [cacheExchange, ssr, ...exchanges, customAuthExchange, fetchExchange],
+            exchanges: [...exchanges, customAuthExchange, fetchExchange],
         });
 
         return [client, ssr];
