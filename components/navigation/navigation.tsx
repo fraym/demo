@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { ComponentPropsWithoutRef, ElementRef, FC, forwardRef } from "react";
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -26,7 +26,7 @@ interface NavigationProps {
     items: NavigationItem[];
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ items }) => {
+export const Navigation: FC<NavigationProps> = ({ items }) => {
     return (
         <NavigationMenu>
             <NavigationMenuList>
@@ -52,7 +52,7 @@ export const Navigation: React.FC<NavigationProps> = ({ items }) => {
     );
 };
 
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
+const ListItem = forwardRef<ElementRef<"a">, ComponentPropsWithoutRef<"a">>(
     ({ className, title, children, href, ...props }, ref) => {
         return (
             <li>
@@ -64,7 +64,8 @@ const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
                             className
                         )}
                         href={href}
-                        target={href.startsWith("https://") ? "_blank" : undefined}
+                        target={href?.startsWith("https://") ? "_blank" : undefined}
+                        rel={href?.startsWith("https://") ? "noopener noreferrer" : undefined}
                         {...props}>
                         <div className="text-sm font-medium leading-none">{title}</div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">

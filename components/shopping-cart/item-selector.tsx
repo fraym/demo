@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
     Select,
     SelectContent,
@@ -17,7 +18,7 @@ interface ItemSelectorProps {
     onSelect: (value: string | null) => void;
 }
 
-export const ItemSelector: React.FC<ItemSelectorProps> = ({ label, items, value, onSelect }) => {
+export const ItemSelector: FC<ItemSelectorProps> = ({ label, items, value, onSelect }) => {
     return (
         <Select onValueChange={onSelect} value={value ?? undefined}>
             <SelectTrigger className="w-[280px] mb-6">

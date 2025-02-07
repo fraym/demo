@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { FC, PropsWithChildren, useMemo } from "react";
 import { redirect } from "next/navigation";
 import { createClient as createWSClient } from "graphql-ws";
 import { authExchange } from "@urql/exchange-auth";
@@ -13,7 +13,7 @@ import {
     subscriptionExchange,
 } from "@urql/next";
 
-export const GraphqlProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const GraphqlProvider: FC<PropsWithChildren> = ({ children }) => {
     const [client, ssr] = useMemo(() => {
         const jwt = typeof window !== "undefined" ? (localStorage.getItem("jwt") ?? "") : "";
         const ssr = ssrExchange({
@@ -57,7 +57,7 @@ export const GraphqlProvider: React.FC<React.PropsWithChildren> = ({ children })
             };
         });
 
-        let exchanges: Exchange[] = [];
+        const exchanges: Exchange[] = [];
 
         if (typeof window !== "undefined") {
             const wsStreamsClient = createWSClient({

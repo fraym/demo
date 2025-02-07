@@ -118,9 +118,11 @@ export const RemoveItemFromCartCard = () => {
             return [];
         }
 
-        return carts
-            .find(cart => cart.id === shoppingCartId)!
-            .items.map(item => ({ value: item.id, label: item.product.name }));
+        return (
+            carts
+                .find(cart => cart.id === shoppingCartId)
+                ?.items.map(item => ({ value: item.id, label: item.product.name })) ?? []
+        );
     }, [carts, shoppingCartId]);
 
     return (

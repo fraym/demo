@@ -50,7 +50,7 @@ export const shoppingCartColumns: ColumnDef<ShoppingCart>[] = [
                 <ul>
                     {Object.keys(data).map(productId => (
                         <li key={productId}>
-                            {data[productId].name} x{data[productId].count}
+                            {data[productId]!.name} x{data[productId]!.count}
                         </li>
                     ))}
                 </ul>
@@ -69,6 +69,7 @@ export const shoppingCartColumns: ColumnDef<ShoppingCart>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             const action = useCallback(() => {
                 triggerDeleteShoppingCart(row.original.id);
             }, [row.original.id]);

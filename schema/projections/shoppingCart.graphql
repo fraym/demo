@@ -1,13 +1,13 @@
 type ShoppingCart
     @upsertOn(
         on: {
-            topic: "demoApp"
+            topic: "demo_app"
             eventTypes: ["CreateShoppingCart", "CreateShoppingCartItem", "RemoveItemFromCart"]
         }
         identifyBy: { payload: ["shoppingCartId"] }
     )
     @removeOn(
-        on: { topic: "demoApp", eventTypes: ["DeleteShoppingCart"] }
+        on: { topic: "demo_app", eventTypes: ["DeleteShoppingCart"] }
         identifyBy: { payload: ["shoppingCartId"] }
     ) {
     name: String!
@@ -21,11 +21,11 @@ type ShoppingCart
 
 type ShoppingCartItem
     @upsertOn(
-        on: { topic: "demoApp", eventTypes: ["CreateShoppingCartItem"] }
+        on: { topic: "demo_app", eventTypes: ["CreateShoppingCartItem"] }
         identifyBy: { payload: ["itemId"] }
     )
     @removeOn(
-        on: { topic: "demoApp", eventTypes: ["RemoveItemFromCart"] }
+        on: { topic: "demo_app", eventTypes: ["RemoveItemFromCart"] }
         identifyBy: { payload: ["itemId"] }
     ) {
     product: Product!

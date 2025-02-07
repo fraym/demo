@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect } from "react";
+import { FC, PropsWithChildren, createContext, useContext, useEffect } from "react";
 import { ResultOf } from "gql.tada";
 import { ShoppingCart } from "@/components/shopping-cart/columns";
 import { CartSubscription, GetCartsQuery, useProjectionsQuery } from "@/graphql/projections";
@@ -12,7 +12,7 @@ interface ShoppingCartContext {
 
 const ShoppingCartContext = createContext<ShoppingCartContext>({} as ShoppingCartContext);
 
-export const ShoppingCartProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const ShoppingCartProvider: FC<PropsWithChildren> = ({ children }) => {
     const [response] = useProjectionsQuery({
         query: GetCartsQuery,
         variables: { input: { useStrongConsistency: true } },
@@ -62,6 +62,7 @@ export const ShoppingCartProvider: React.FC<React.PropsWithChildren> = ({ childr
 
     useEffect(() => {
         startSubscription();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

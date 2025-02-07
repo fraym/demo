@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect } from "react";
+import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect } from "react";
 import { ResultOf } from "gql.tada";
 import { Product } from "@/components/product/columns";
 import {
@@ -24,7 +24,7 @@ interface ProductContext {
 
 const ProductContext = createContext<ProductContext>({} as ProductContext);
 
-export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const ProductProvider: FC<PropsWithChildren> = ({ children }) => {
     const [response] = useCrudQuery({
         query: GetProductsQuery,
         variables: { input: {} },
@@ -68,13 +68,14 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
             return prev ?? [];
         }
     );
-    const [createState, createProductMutation] = useCrudMutation(CreateProductMutation);
-    const [updateState, updateProductMutation] = useCrudMutation(UpdateProductMutation);
-    const [deleteState, deleteProductMutation] = useCrudMutation(DeleteProductMutation);
+    const createProductMutation = useCrudMutation(CreateProductMutation)[1];
+    const updateProductMutation = useCrudMutation(UpdateProductMutation)[1];
+    const deleteProductMutation = useCrudMutation(DeleteProductMutation)[1];
     const { toast } = useToast();
 
     useEffect(() => {
         startSubscription();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const createProduct = useCallback(
@@ -87,7 +88,10 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
                 });
                 return;
             }
-            onSuccess && onSuccess();
+
+            if (onSuccess) {
+                onSuccess();
+            }
         },
         [toast, createProductMutation]
     );
@@ -102,7 +106,10 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
                 });
                 return;
             }
-            onSuccess && onSuccess();
+
+            if (onSuccess) {
+                onSuccess();
+            }
         },
         [toast, updateProductMutation]
     );
@@ -117,7 +124,10 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({ children })
                 });
                 return;
             }
-            onSuccess && onSuccess();
+
+            if (onSuccess) {
+                onSuccess();
+            }
         },
         [toast, deleteProductMutation]
     );

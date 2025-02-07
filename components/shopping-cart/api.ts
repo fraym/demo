@@ -18,7 +18,7 @@ export const triggerCreateShoppingCartEvent = async (name: string) => {
     await client
         .mutation(PublishMutation, {
             input: {
-                topic: "demoApp",
+                topic: "demo_app",
                 events: [
                     {
                         id: shoppingCartId,
@@ -51,7 +51,7 @@ export const triggerCreateShoppingCartItemEvent = async (
     await client
         .mutation(PublishMutation, {
             input: {
-                topic: "demoApp",
+                topic: "demo_app",
                 events: [
                     {
                         id: uuid(),
@@ -85,7 +85,7 @@ export const triggerRemoveItemFromCartEvent = async (shoppingCartId: string, ite
     await client
         .mutation(PublishMutation, {
             input: {
-                topic: "demoApp",
+                topic: "demo_app",
                 events: [
                     {
                         id: uuid(),
@@ -115,7 +115,7 @@ export const triggerDeleteShoppingCart = async (shoppingCartId: string) => {
     await client
         .mutation(PublishMutation, {
             input: {
-                topic: "demoApp",
+                topic: "demo_app",
                 events: [
                     {
                         id: uuid(),

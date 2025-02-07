@@ -31,6 +31,7 @@ export const GetCartsQuery = graphql(`
 export const CartSubscription = graphql(`
     subscription ProductSubscription($input: SubscribeShoppingCartListInput!) {
         subscribeToShoppingCartList(input: $input) {
+            __typename
             ... on ShoppingCart {
                 id
                 name
