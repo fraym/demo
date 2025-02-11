@@ -16,6 +16,17 @@ export async function GET(request: NextRequest) {
         redirect(`/login?error=Server error. Please Try again.`);
     }
 
+    if(!process.env.JWT_SECRET) {
+        redirect(`/login?error=missing JWT_SECRET`);
+    }
+
+    const uRLSearchParams: Record<string, string> = {
+        tenant_id: "",
+        grant_type: "authorization_code",
+        client_secret: process.env.JWT_SECRET,
+        code,
+    }
+
     const response = await fetch(
         `https://${process.env.NEXT_PUBLIC_CLIENT_NAME}.demo.freym.io/auth/token`,
         {
@@ -23,12 +34,7 @@ export async function GET(request: NextRequest) {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: new URLSearchParams({
-                tenant_id: "",
-                grant_type: "authorization_code",
-                client_secret: process.env.JWT_SECRET,
-                code,
-            }),
+            body: new URLSearchParams(uRLSearchParams),
         }
     );
 
