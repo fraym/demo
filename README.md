@@ -6,6 +6,14 @@ This demo app is intended to be a starting point to try out Freym. Please have a
 
 The Freym demo is a closed demo. To get a running demo instance of Freym please [get in touch with us](https://becklyn.com/en/contact)
 
+## Git Hooks
+
+To activate the Git hooks checked into the repository, execute the following command:
+
+```bash
+git config core.hooksPath .git-hooks
+```
+
 ## Local setup
 
 -   Get in touch with us and request a demo instance. We will provide all needed configuration values:
