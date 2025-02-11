@@ -19,7 +19,7 @@ type ClientName = "streams" | "projections" | "crud" | "auth";
 export const useCustomQuery = <Data = any, Variables extends AnyVariables = AnyVariables>(
     args: UseQueryArgs<Variables, Data>,
     clientName: ClientName
-): UseQueryResponse<Data, Variables> => {
+): UseQueryResponse<Data, Variables | undefined> => {
     const [result, reexecuteQuery] = useQuery({
         ...args,
         context: useMemo(() => ({ clientName }), []),

@@ -1,9 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { redirect, useSearchParams } from "next/navigation";
 
 export default function Page() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <TokenHandler />
+        </Suspense>
+    );
+}
+
+function TokenHandler() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
