@@ -14,5 +14,5 @@ updates:
     versioning-strategy: "increase"
     target-branch: "main"
     labels:
-      - "UI"
+      - "dependabot"
       - "needs-review"
