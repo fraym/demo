@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
-
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const error = searchParams.get("error");
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
         redirect(`/login?error=Server error. Please Try again.`);
     }
 
-    if(!process.env.JWT_SECRET) {
+    if (!process.env.JWT_SECRET) {
         redirect(`/login?error=missing JWT_SECRET`);
     }
 
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
         grant_type: "authorization_code",
         client_secret: process.env.JWT_SECRET,
         code,
-    }
+    };
 
     const response = await fetch(
         `https://${process.env.NEXT_PUBLIC_CLIENT_NAME}.demo.freym.io/auth/token`,
