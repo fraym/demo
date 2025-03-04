@@ -10,7 +10,7 @@
         "tada:cache": "gql-tada generate turbo"
     },
     "engines": {
-        "node": ">=18"
+        "node": ">=22.14.0"
     },
     "dependencies": {
         "@fraym/auth": "0.7.1",
