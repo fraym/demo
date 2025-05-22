@@ -13,7 +13,7 @@ export const OrderList: FC<OrderListProps> = ({ jwt }) => {
 
     return (
         <div>
-            <h1>Ingredients</h1>
+            <h1>Orders</h1>
             {loading && <Loading />}
 
             <table>
