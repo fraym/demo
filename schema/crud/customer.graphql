@@ -1,0 +1,3 @@
+type Customer @crudType {
+    name: String! @index @unique
+}

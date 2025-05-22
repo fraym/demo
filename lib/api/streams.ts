@@ -3,4 +3,7 @@ import { introspection } from "@/lib/api/streams-env";
 
 export const graphql = initGraphQLTada<{
     introspection: introspection;
+    scalars: {
+        DateTime: number;
+    };
 }>();

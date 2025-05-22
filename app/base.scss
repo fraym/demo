@@ -1,0 +1,64 @@
+body {
+    padding: 2rem;
+}
+
+h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+ul {
+    margin-bottom: 2rem;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+label {
+    display: flex;
+    gap: 1rem;
+}
+
+button {
+    border: 1px solid #000;
+    border-radius: 2px;
+    padding: 2px 5px;
+}
+
+.error {
+    color: rgb(178, 0, 0);
+}
+
+.success {
+    color: rgb(0, 156, 0);
+}
+
+.overview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.overview-link {
+    display: block;
+    margin-bottom: 20px;
+}
+
+td {
+    padding: 10px 20px 0 0;
+}
+
+thead {
+    font-weight: bold;
+}

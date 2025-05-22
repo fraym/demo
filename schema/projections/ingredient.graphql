@@ -1,0 +1,19 @@
+type Ingredient
+    @upsertOn(
+        on: { topic: "demo", eventTypes: ["CreateIngredient"] }
+        identifyBy: { payload: ["id"] }
+    )
+    @upsertOn(
+        on: { topic: "demo", eventTypes: ["PlaceOrder"] }
+        identifyBy: { payload: ["ingredients"] }
+    )
+    @removeOn(
+        on: { topic: "demo", eventTypes: ["DeleteIngredient"] }
+        identifyBy: { payload: ["id"] }
+    ) {
+    name: String! @index
+    amount: Int!
+        @from(events: ["CreateIngredient"], value: "payload.amount")
+        @from(events: ["PlaceOrder"], value: "projection.amount - 1")
+        @index
+}

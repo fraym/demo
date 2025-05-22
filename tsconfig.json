@@ -15,7 +15,7 @@
                     {
                         "name": "streams",
                         "schema": {
-                            "url": "https://tn.demo.freym.io/streams/management/graphql",
+                            "url": "https://demo.demo.freym.io/streams/management/graphql",
                             "headers": {
                                 "Accept": "application/graphql-response+json"
                             }
@@ -25,7 +25,7 @@
                     {
                         "name": "projections",
                         "schema": {
-                            "url": "https://tn.demo.freym.io/projections/delivery/graphql",
+                            "url": "https://demo.demo.freym.io/projections/delivery/graphql",
                             "headers": {
                                 "Accept": "application/graphql-response+json"
                             }
@@ -35,7 +35,7 @@
                     {
                         "name": "crud",
                         "schema": {
-                            "url": "https://tn.demo.freym.io/crud/delivery/graphql",
+                            "url": "https://demo.demo.freym.io/crud/delivery/graphql",
                             "headers": {
                                 "Accept": "application/graphql-response+json"
                             }
@@ -45,7 +45,7 @@
                     {
                         "name": "auth",
                         "schema": {
-                            "url": "https://tn.demo.freym.io/auth/management/graphql",
+                            "url": "https://demo.demo.freym.io/auth/management/graphql",
                             "headers": {
                                 "Accept": "application/graphql-response+json"
                             }

@@ -1,0 +1,12 @@
+type Order
+    @upsertOn(on: { topic: "demo", eventTypes: ["PlaceOrder"] }, identifyBy: { payload: ["id"] }) {
+    customer: Customer!
+    ingredients: [Ingredient!]!
+}
+
+type PlacedOrder @view(sqlFile: "./placed_order.sql") {
+    id: ID!
+    name: String!
+    date: DateTime! @index
+    ingredients: [String!]!
+}
