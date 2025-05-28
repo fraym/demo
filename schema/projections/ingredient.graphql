@@ -6,10 +6,6 @@ type Ingredient
     @upsertOn(
         on: { topic: "demo", eventTypes: ["PlaceOrder"] }
         identifyBy: { payload: ["ingredients"] }
-    )
-    @removeOn(
-        on: { topic: "demo", eventTypes: ["DeleteIngredient"] }
-        identifyBy: { payload: ["id"] }
     ) {
     name: String! @index
     amount: Int!
