@@ -2,6 +2,7 @@ type Order
     @upsertOn(on: { topic: "demo", eventTypes: ["PlaceOrder"] }, identifyBy: { payload: ["id"] }) {
     customer: Customer!
     ingredients: [Ingredient!]!
+    price: Int! @from(value: "8 + len(payload.ingredients)")
 }
 
 type PlacedOrder @view(sqlFile: "./placed_order.sql") {
@@ -9,4 +10,5 @@ type PlacedOrder @view(sqlFile: "./placed_order.sql") {
     name: String!
     date: DateTime! @index
     ingredients: [String!]!
+    price: Int!
 }

@@ -22,6 +22,7 @@ export const OrderList: FC<OrderListProps> = ({ jwt }) => {
                         <td>Name</td>
                         <td>Date</td>
                         <td>Ingredients</td>
+                        <td>Price</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,7 @@ export const OrderList: FC<OrderListProps> = ({ jwt }) => {
                                     {date.toLocaleDateString()} {date.toLocaleTimeString()}
                                 </td>
                                 <td>{item.ingredients.join(", ")}</td>
+                                <td>{item.price}</td>
                             </tr>
                         );
                     })}

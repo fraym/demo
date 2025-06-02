@@ -11,6 +11,7 @@ const PlacedOrderListQuery = graphql(`
                 name
                 date
                 ingredients
+                price
             }
         }
     }
@@ -25,6 +26,7 @@ const PlacedOrderListSubscription = graphql(`
                 name
                 date
                 ingredients
+                price
             }
         }
     }

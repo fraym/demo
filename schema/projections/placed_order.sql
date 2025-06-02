@@ -2,9 +2,10 @@ SELECT
 	o.id as id,
 	c.name as name,
 	o.createdat as date,
-  	jsonb_agg(i.name) AS ingredients
+  	jsonb_agg(i.name) AS ingredients,
+    o.price as price
 FROM orderview AS o
 INNER JOIN customerview AS c ON o.customer = c.id
 INNER JOIN ingredientview AS i ON o.ingredients::jsonb ? i.id
-GROUP BY o.id, c.name, o.createdat
+GROUP BY o.id, c.name, o.createdat, o.price
 ORDER BY o.createdat ASC
