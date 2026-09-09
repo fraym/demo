@@ -10,17 +10,17 @@
         "generate": "gql.tada generate-output"
     },
     "engines": {
-        "node": ">=22"
+        "node": ">=24.21.0"
     },
     "dependencies": {
-        "@becklyn/next": "^2.0.0",
-        "@fraym/auth": "^0.36.0",
-        "@fraym/react": "^0.36.0",
-        "@fraym/streams": "^0.36.0",
-        "@urql/exchange-auth": "^2.2.1",
-        "@urql/exchange-request-policy": "^1.2.1",
-        "@urql/exchange-retry": "^1.3.1",
-        "@urql/next": "^1.1.5",
+        "@becklyn/next": "^5.1.1",
+        "@fraym/auth": "^1.1.2",
+        "@fraym/react": "^1.1.2",
+        "@fraym/streams": "^1.1.2",
+        "@urql/exchange-auth": "^3.0.0",
+        "@urql/exchange-request-policy": "^2.0.0",
+        "@urql/exchange-retry": "^2.0.0",
+        "@urql/next": "^2.0.1",
         "clsx": "^2.1.1",
         "gql.tada": "^1.8.10",
         "graphql-ws": "^6.0.5",
@@ -31,13 +31,13 @@
         "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@becklyn/eslint": "^1.1.2",
+        "@becklyn/eslint": "^2.0.6",
         "@becklyn/prettier": "^2.1.2",
         "@becklyn/tsconfig": "^1.0.0",
         "@types/node": "^22.15.21",
         "@types/react": "^19.1.5",
         "@types/react-dom": "^19.1.5",
-        "typescript": "^5.8.3"
+        "typescript": "^7.0.2"
     },
     "prettier": "@becklyn/prettier"
 }
